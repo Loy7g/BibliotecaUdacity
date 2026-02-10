@@ -1,0 +1,111 @@
+:root {
+  font-family: 'Georgia', 'Times New Roman', serif;
+  line-height: 1.6;
+  font-weight: 400;
+
+  --bg-primary: #0a0a0a;
+  --bg-secondary: #1a1a1a;
+  --bg-card: #1e1e1e;
+  --bg-shelf: linear-gradient(180deg, #2a2520 0%, #1a1510 100%);
+  --text-primary: #e8e6e3;
+  --text-secondary: #a8a6a3;
+  --accent-gold: #d4af37;
+  --accent-copper: #b87333;
+  --accent-amber: #ff9f1c;
+  --success: #6b9080;
+  --warning: #e07a5f;
+  --danger: #c1666b;
+  --border: rgba(212, 175, 55, 0.2);
+  --shadow: 0 8px 32px rgba(0, 0, 0, 0.6);
+  --glow: 0 0 20px rgba(212, 175, 55, 0.3);
+
+  color: var(--text-primary);
+  background: var(--bg-primary);
+
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  min-height: 100vh;
+  background: radial-gradient(ellipse at top, #1a1510 0%, #0a0a0a 50%, #000000 100%);
+  background-attachment: fixed;
+}
+
+a {
+  font-weight: 500;
+  color: var(--accent-gold);
+  text-decoration: none;
+  transition: all 0.3s ease;
+  position: relative;
+}
+
+a:hover {
+  color: var(--accent-amber);
+  text-shadow: 0 0 10px rgba(212, 175, 55, 0.5);
+}
+
+h1 {
+  font-size: 2.8em;
+  line-height: 1.2;
+  font-weight: 700;
+  font-family: 'Georgia', serif;
+  letter-spacing: 0.02em;
+}
+
+button {
+  border-radius: 6px;
+  border: 1px solid var(--border);
+  padding: 0.75em 1.8em;
+  font-size: 0.95em;
+  font-weight: 600;
+  font-family: 'Georgia', serif;
+  background: linear-gradient(135deg, var(--accent-gold) 0%, var(--accent-copper) 100%);
+  color: #000;
+  cursor: pointer;
+  transition: all 0.4s ease;
+  box-shadow: 0 4px 15px rgba(212, 175, 55, 0.3);
+  position: relative;
+  overflow: hidden;
+}
+
+button::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.3);
+  transform: translate(-50%, -50%);
+  transition: width 0.6s, height 0.6s;
+}
+
+button:hover::before {
+  width: 300px;
+  height: 300px;
+}
+
+button:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 25px rgba(212, 175, 55, 0.5);
+}
+
+button:active {
+  transform: translateY(-1px);
+}
+
+button:focus,
+button:focus-visible {
+  outline: 2px solid var(--accent-gold);
+  outline-offset: 3px;
+}
