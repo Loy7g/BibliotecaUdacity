@@ -3,13 +3,18 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { BooksContext } from '../context/BooksContext';
 import BookList from '../components/BookList/BookList';
 import SearchBar from '../components/SearchBar/SearchBar';
+import EditBookModal from '../components/EditBookModal/EditBookModal';
+import ConfirmModal from '../components/ConfirmModal/ConfirmModal';
 import './CategoryPage.css';
 
 const CategoryPage = () => {
   const { category } = useParams();
   const navigate = useNavigate();
-  const { getBooksByCategory, updateBook, deleteBook } = useContext(BooksContext);
+  const { getBooksByCategory, updateBook, deleteBook, loading } = useContext(BooksContext);
   const [searchTerm, setSearchTerm] = useState('');
+  const [editingBook, setEditingBook] = useState(null);
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [deleteConfirm, setDeleteConfirm] = useState({ isOpen: false, bookId: null, bookTitle: '' });
 
   const categoryLabels = {
     'lidos': 'Já Li',
@@ -44,18 +49,42 @@ const CategoryPage = () => {
   });
 
   const handleEdit = (book) => {
-    alert(`Editar: ${book.title}\n(Funcionalidade de edição pode ser implementada em um modal)`);
+    setEditingBook(book);
+    setIsEditModalOpen(true);
+  };
+
+  const handleSaveEdit = (formData) => {
+    updateBook(editingBook.id, formData);
+    setEditingBook(null);
   };
 
   const handleDelete = (id) => {
-    if (window.confirm('Tem certeza que deseja excluir este livro?')) {
-      deleteBook(id);
-    }
+    const book = books.find(b => b.id === id);
+    setDeleteConfirm({
+      isOpen: true,
+      bookId: id,
+      bookTitle: book?.title || 'este livro'
+    });
+  };
+
+  const confirmDelete = () => {
+    deleteBook(deleteConfirm.bookId);
+    setDeleteConfirm({ isOpen: false, bookId: null, bookTitle: '' });
   };
 
   const handleChangeCategory = (id, newCategory) => {
     updateBook(id, { category: newCategory });
   };
+
+  if (loading) {
+    return (
+      <div className="category-page">
+        <div className="loading-state">
+          <p>📖 Carregando livros...</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="category-page">
@@ -94,6 +123,28 @@ const CategoryPage = () => {
           </button>
         </div>
       )}
+
+      <EditBookModal
+        key={editingBook?.id}
+        book={editingBook}
+        isOpen={isEditModalOpen}
+        onClose={() => {
+          setIsEditModalOpen(false);
+          setEditingBook(null);
+        }}
+        onSave={handleSaveEdit}
+      />
+
+      <ConfirmModal
+        isOpen={deleteConfirm.isOpen}
+        onClose={() => setDeleteConfirm({ isOpen: false, bookId: null, bookTitle: '' })}
+        onConfirm={confirmDelete}
+        title="Excluir Livro"
+        message={`Tem certeza que deseja excluir "${deleteConfirm.bookTitle}"? Esta ação não pode ser desfeita.`}
+        confirmText="🗑️ Excluir"
+        cancelText="Cancelar"
+        type="danger"
+      />
     </div>
   );
 };

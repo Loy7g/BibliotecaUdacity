@@ -9,6 +9,11 @@ const BookCard = ({ book, onEdit, onDelete, onChangeCategory }) => {
 
   return (
     <div className="book-card">
+      {book.imageUrl && (
+        <div className="book-image">
+          <img src={book.imageUrl} alt={book.title} />
+        </div>
+      )}
       <div className="book-card-header">
         <h3 className="book-title">{book.title}</h3>
         <span className={`category-badge ${book.category}`}>

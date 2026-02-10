@@ -59,7 +59,7 @@
 <body>
     <div class="container">
         <h1>📚 Biblioteca de Livros</h1>
-        <p>Clique no botão abaixo para limpar os dados salvos e restaurar os 12 livros de exemplo.</p>
+        <p>Clique no botão abaixo para limpar o localStorage e carregar os livros da API Udacity.</p>
         <button onclick="limparDados()">Limpar LocalStorage</button>
         <button onclick="window.location.href='http://localhost:5173'">Ir para o App</button>
         <div id="message"></div>
@@ -68,7 +68,9 @@
     <script>
         function limparDados() {
             localStorage.removeItem('biblioteca-livros');
-            document.getElementById('message').innerHTML = '<p class="success">✅ Dados limpos! Recarregue o aplicativo para ver os livros de exemplo.</p>';
+            // Também limpa o token da API para gerar um novo
+            // localStorage.removeItem('token');
+            document.getElementById('message').innerHTML = '<p class="success">✅ Dados limpos! O aplicativo agora carregará os livros da API Udacity.</p>';
         }
     </script>
 </body>
