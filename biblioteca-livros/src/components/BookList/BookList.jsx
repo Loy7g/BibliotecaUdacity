@@ -1,7 +1,7 @@
 import BookCard from '../BookCard/BookCard';
 import './BookList.css';
 
-const BookList = ({ books, onEdit, onDelete, onChangeCategory, emptyMessage = 'Nenhum livro encontrado' }) => {
+const BookList = ({ books, onEdit, onDelete, onChangeCategory, onRatingChange, emptyMessage = 'Nenhum livro encontrado' }) => {
   if (books.length === 0) {
     return (
       <div className="empty-state">
@@ -19,6 +19,7 @@ const BookList = ({ books, onEdit, onDelete, onChangeCategory, emptyMessage = 'N
           onEdit={onEdit}
           onDelete={onDelete}
           onChangeCategory={onChangeCategory}
+          onRatingChange={onRatingChange}
         />
       ))}
     </div>

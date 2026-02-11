@@ -76,6 +76,10 @@ const CategoryPage = () => {
     updateBook(id, { category: newCategory });
   };
 
+  const handleRatingChange = (id, newRating) => {
+    updateBook(id, { rating: newRating });
+  };
+
   if (loading) {
     return (
       <div className="category-page">
@@ -109,6 +113,7 @@ const CategoryPage = () => {
         onEdit={handleEdit}
         onDelete={handleDelete}
         onChangeCategory={handleChangeCategory}
+        onRatingChange={handleRatingChange}
         emptyMessage={
           searchTerm
             ? 'Nenhum livro encontrado com essa busca'

@@ -193,7 +193,22 @@
   box-shadow: 0 8px 32px rgba(212, 175, 55, 0.6);
 }
 
-/* Scrollbar personalizada */
+.rating-input {
+  padding: 1rem;
+  background: rgba(0, 0, 0, 0.3);
+  border-radius: 8px;
+  border: 2px solid rgba(212, 175, 55, 0.2);
+  display: flex;
+  justify-content: center;
+  transition: all 0.3s ease;
+}
+
+.rating-input:hover {
+  border-color: rgba(212, 175, 55, 0.4);
+  background: rgba(0, 0, 0, 0.4);
+}
+
+
 .modal-content::-webkit-scrollbar {
   width: 10px;
 }

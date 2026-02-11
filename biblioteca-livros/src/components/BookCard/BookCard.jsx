@@ -1,10 +1,18 @@
+import StarRating from '../StarRating/StarRating';
 import './BookCard.css';
 
-const BookCard = ({ book, onEdit, onDelete, onChangeCategory }) => {
+const BookCard = ({ book, onEdit, onDelete, onChangeCategory, onRatingChange, showEditDelete = true }) => {
   const categoryLabels = {
     'lidos': 'Já Li',
     'lendo': 'Lendo',
-    'quero-ler': 'Quero Ler'
+    'quero-ler': 'Quero Ler',
+    'none': 'Nenhuma'
+  };
+
+  const handleRatingChange = (newRating) => {
+    if (onRatingChange) {
+      onRatingChange(book.id, newRating);
+    }
   };
 
   return (
@@ -16,14 +24,24 @@ const BookCard = ({ book, onEdit, onDelete, onChangeCategory }) => {
       )}
       <div className="book-card-header">
         <h3 className="book-title">{book.title}</h3>
-        <span className={`category-badge ${book.category}`}>
-          {categoryLabels[book.category]}
-        </span>
+        {book.category !== 'none' && (
+          <span className={`category-badge ${book.category}`}>
+            {categoryLabels[book.category]}
+          </span>
+        )}
       </div>
       
       <p className="book-author">por {book.author}</p>
       
       {book.year && <p className="book-year">Ano: {book.year}</p>}
+      
+      <div className="book-rating-section">
+        <StarRating
+          rating={book.rating || 0}
+          onRatingChange={handleRatingChange}
+          size="medium"
+        />
+      </div>
       
       {book.notes && (
         <p className="book-notes">{book.notes}</p>
@@ -35,18 +53,23 @@ const BookCard = ({ book, onEdit, onDelete, onChangeCategory }) => {
           value={book.category}
           onChange={(e) => onChangeCategory(book.id, e.target.value)}
         >
+          <option value="none">Nenhuma</option>
           <option value="quero-ler">Quero Ler</option>
           <option value="lendo">Lendo</option>
           <option value="lidos">Já Li</option>
         </select>
         
-        <button onClick={() => onEdit(book)} className="btn-edit">
-          ✏️ Editar
-        </button>
-        
-        <button onClick={() => onDelete(book.id)} className="btn-delete">
-          🗑️ Excluir
-        </button>
+        {showEditDelete && (
+          <>
+            <button onClick={() => onEdit(book)} className="btn-edit">
+              ✏️ Editar
+            </button>
+            
+            <button onClick={() => onDelete(book.id)} className="btn-delete">
+              🗑️ Excluir
+            </button>
+          </>
+        )}
       </div>
     </div>
   );

@@ -1,6 +1,6 @@
 # 📚 Biblioteca de Livros
 
-Uma aplicação web moderna para gerenciar sua biblioteca pessoal de livros, construída com React e Vite.
+Uma aplicação web moderna para gerenciar sua biblioteca pessoal de livros, construída com React e Vite, integrada com a API do Udacity.
 
 ## 📋 Sobre o Projeto
 
@@ -9,17 +9,32 @@ Esta aplicação permite que você organize seus livros em três categorias prin
 - **Lendo**: Livros que você está lendo atualmente
 - **Já Li**: Livros que você já terminou de ler
 
+Além disso, você pode buscar e adicionar novos livros através da integração com a API de livros do Udacity.
+
 ## ✨ Funcionalidades
 
+- 🔍 **Buscar livros** na base de dados do Udacity
+  - Busca por título ou autor
+  - Suporte para múltiplas palavras (ex: "inteligência artificial")
+  - Busca funciona mesmo sem miniatura ou autor disponível
+  - Resultados em tempo real com debounce
+  - Adicionar livros encontrados às suas estantes
+- ⭐ **Sistema de Avaliação** estilo Letterboxd
+  - Avaliar livros de 1 a 5 estrelas
+  - Interface interativa com hover e animações
+  - Feedback visual imediato
+  - Persistência automática das avaliações
+  - Disponível em todas as páginas (Home, Categorias, Busca)
 - ✅ Adicionar novos livros com título, autor, ano e notas
-- 🔍 Buscar livros por título ou autor
 - 📊 Visualizar estatísticas da sua biblioteca
 - 🏷️ Categorizar livros (Quero Ler, Lendo, Já Li)
-- ✏️ Alterar categoria dos livros facilmente
-- 🗑️ Excluir livros da biblioteca
-- 💾 Persistência de dados usando LocalStorage
+- ✏️ Editar informações dos livros com modal elegante
+- 🔄 Alterar categoria dos livros entre estantes
+- 🗑️ Excluir livros com confirmação modal
+- 💾 Sincronização automática com API do Udacity
 - 📱 Design responsivo para mobile e desktop
-- 🎨 Interface moderna com tema claro/escuro automático
+- 🎨 Interface moderna com tema elegante dourado/escuro
+- 🖼️ Exibição de capas dos livros
 
 ## 🛠️ Tecnologias Utilizadas
 
@@ -27,8 +42,8 @@ Esta aplicação permite que você organize seus livros em três categorias prin
 - **Vite** - Build tool e dev server ultra-rápido
 - **React Router DOM** - Gerenciamento de rotas
 - **Context API** - Gerenciamento de estado global
+- **BooksAPI (Udacity)** - API REST para gerenciar livros
 - **CSS3** - Estilização moderna e responsiva
-- **LocalStorage** - Persistência de dados local
 
 ## 📁 Estrutura do Projeto
 
@@ -41,13 +56,18 @@ biblioteca-livros/
 │   │   ├── BookForm/       # Formulário de adição/edição
 │   │   ├── BookList/       # Lista de livros
 │   │   ├── Header/         # Cabeçalho com navegação
-│   │   └── SearchBar/      # Barra de busca
+│   │   ├── SearchBar/      # Barra de busca
+│   │   ├── EditBookModal/  # Modal de edição de livros
+│   │   ├── ConfirmModal/   # Modal de confirmação
+│   │   └── StarRating/     # Componente de avaliação por estrelas
 │   ├── context/            # Context API
 │   │   └── BooksContext.jsx
 │   ├── pages/              # Páginas da aplicação
 │   │   ├── Home.jsx        # Página inicial
 │   │   ├── CategoryPage.jsx # Página de categoria
-│   │   └── AddBook.jsx     # Página de adicionar livro
+│   │   ├── AddBook.jsx     # Página de adicionar livro
+│   │   └── SearchPage.jsx  # Página de busca
+│   ├── BooksAPI.js         # Cliente da API do Udacity
 │   ├── App.jsx             # Componente principal
 │   ├── main.jsx            # Ponto de entrada
 │   └── index.css           # Estilos globais
@@ -128,21 +148,54 @@ npm run preview
 - Comentários quando necessário
 - Estrutura de pastas lógica
 
+## 🎯 Funcionalidades Implementadas
+
+### Página de Busca
+- ✅ Campo de entrada de busca com feedback visual
+- ✅ Resultados em tempo real conforme o usuário digita (com debounce de 300ms)
+- ✅ Resultados não são mostrados quando a caixa de busca está vazia
+- ✅ Tratamento de consultas inválidas e resultados vazios
+- ✅ Funciona corretamente com livros sem miniatura ou autor
+- ✅ Suporte para busca de múltiplas palavras (ex: "inteligência artificial", "poesia", "biografia")
+
+### Sincronização entre Páginas
+- ✅ Livros podem ser movidos entre estantes (Quero Ler, Lendo, Já Li, Nenhuma)
+- ✅ Mudanças na página de busca refletem na página principal
+- ✅ Estante correta é exibida para livros já categorizados
+- ✅ Opção "Nenhuma" disponível para remover livros das estantes
+
+### Modais e Interface
+- ✅ Modal elegante para edição de livros
+- ✅ Modal de confirmação para exclusão com design profissional
+- ✅ Animações suaves e transições
+- ✅ Design responsivo e moderno
+# Sistema de Avaliação
+- ✅ Componente de estrelas interativo (1-5 estrelas)
+- ✅ Animações ao passar o mouse e clicar
+- ✅ Feedback visual claro (cores douradas)
+- ✅ Texto descritivo da avaliação (Fraco, Regular, Bom, Muito Bom, Excelente)
+- ✅ Funciona em todos os contextos (cards, modais, formulários)
+- ✅ Clique na mesma estrela remove a avaliação
+- ✅ Persistência automática no contexto global
+
 ## 🔄 Futuras Melhorias
 
 Algumas ideias para expandir o projeto:
 
-- [ ] Modal para edição de livros
+- [ ] Filtros por avaliação (mostrar apenas 5 estrelas, 4+, etc.)
+- [ ] Ordenação por avaliação
+- [ ] Estatísticas de avaliação média por categoria
+- [ ] Gráfico de barras com distribuição de avaliações
 - [ ] Sistema de avaliação (estrelas)
-- [ ] Upload de capas de livros
-- [ ] Filtros avançados (por autor, ano, etc.)
-- [ ] Ordenação (por título, data, etc.)
+- [ ] Filtros avançados na busca (por ano, gênero, etc.)
+- [ ] Ordenação customizada (por título, data, avaliação)
 - [ ] Exportar/Importar dados (JSON, CSV)
-- [ ] Gráficos de leitura
-- [ ] Metas de leitura
-- [ ] Compartilhamento de listas
-- [ ] Backend com API REST
+- [ ] Gráficos de progresso de leitura
+- [ ] Metas de leitura anuais
+- [ ] Compartilhamento de listas de livros
 - [ ] Autenticação de usuários
+- [ ] Resenhas e notas expandidas
+- [ ] Citações favoritas dos livros
 
 ## 📄 Licença
 

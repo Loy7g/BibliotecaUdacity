@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import StarRating from '../StarRating/StarRating';
 import './EditBookModal.css';
 
 const EditBookModal = ({ book, isOpen, onClose, onSave }) => {
@@ -7,7 +8,8 @@ const EditBookModal = ({ book, isOpen, onClose, onSave }) => {
     author: book?.author || '',
     year: book?.year || '',
     category: book?.category || 'quero-ler',
-    notes: book?.notes || ''
+    notes: book?.notes || '',
+    rating: book?.rating || 0
   });
 
   const handleChange = (e) => {
@@ -15,6 +17,13 @@ const EditBookModal = ({ book, isOpen, onClose, onSave }) => {
     setFormData(prev => ({
       ...prev,
       [name]: value
+    }));
+  };
+
+  const handleRatingChange = (newRating) => {
+    setFormData(prev => ({
+      ...prev,
+      rating: newRating
     }));
   };
 
@@ -86,6 +95,17 @@ const EditBookModal = ({ book, isOpen, onClose, onSave }) => {
               <option value="lendo">📖 Lendo</option>
               <option value="lidos">✅ Já Li</option>
             </select>
+          </div>
+
+          <div className="form-group">
+            <label>Avaliação</label>
+            <div className="rating-input">
+              <StarRating
+                rating={formData.rating}
+                onRatingChange={handleRatingChange}
+                size="large"
+              />
+            </div>
           </div>
 
           <div className="form-group">

@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import StarRating from '../StarRating/StarRating';
 import './BookForm.css';
 
 const BookForm = ({ initialBook, onSubmit, onCancel }) => {
@@ -7,7 +8,8 @@ const BookForm = ({ initialBook, onSubmit, onCancel }) => {
     author: '',
     year: '',
     category: 'quero-ler',
-    notes: ''
+    notes: '',
+    rating: 0
   });
 
   const handleChange = (e) => {
@@ -15,6 +17,13 @@ const BookForm = ({ initialBook, onSubmit, onCancel }) => {
     setFormData(prev => ({
       ...prev,
       [name]: value
+    }));
+  };
+
+  const handleRatingChange = (newRating) => {
+    setFormData(prev => ({
+      ...prev,
+      rating: newRating
     }));
   };
 
@@ -27,7 +36,8 @@ const BookForm = ({ initialBook, onSubmit, onCancel }) => {
         author: '',
         year: '',
         category: 'quero-ler',
-        notes: ''
+        notes: '',
+        rating: 0
       });
     }
   };
@@ -89,6 +99,17 @@ const BookForm = ({ initialBook, onSubmit, onCancel }) => {
           <option value="lendo">Lendo</option>
           <option value="lidos">Já Li</option>
         </select>
+      </div>
+
+      <div className="form-group">
+        <label>Avaliação</label>
+        <div className="rating-input">
+          <StarRating
+            rating={formData.rating}
+            onRatingChange={handleRatingChange}
+            size="large"
+          />
+        </div>
       </div>
 
       <div className="form-group">

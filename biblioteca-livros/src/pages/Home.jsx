@@ -53,6 +53,10 @@ const Home = () => {
     updateBook(id, { category: newCategory });
   };
 
+  const handleRatingChange = (id, newRating) => {
+    updateBook(id, { rating: newRating });
+  };
+
   const getStatistics = () => {
     return {
       total: books.length,
@@ -113,6 +117,7 @@ const Home = () => {
           onEdit={handleEdit}
           onDelete={handleDelete}
           onChangeCategory={handleChangeCategory}
+          onRatingChange={handleRatingChange}
           emptyMessage={searchTerm ? 'Nenhum livro encontrado com essa busca' : 'Nenhum livro cadastrado ainda. Comece adicionando seu primeiro livro!'}
         />
       </div>

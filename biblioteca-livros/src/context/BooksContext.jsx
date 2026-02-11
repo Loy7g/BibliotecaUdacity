@@ -3,7 +3,7 @@ import * as BooksAPI from '../BooksAPI';
 
 export const BooksContext = createContext();
 
-// Mapeamento entre categorias da aplicação e shelves da API
+
 const categoryToShelf = {
   'lidos': 'read',
   'lendo': 'currentlyReading',
@@ -20,12 +20,10 @@ export const BooksProvider = ({ children }) => {
   const [books, setBooks] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  // Carrega os livros da API na montagem do componente
   useEffect(() => {
     const fetchBooks = async () => {
       try {
         const apiBooks = await BooksAPI.getAll();
-        // Converte os livros da API para o formato da aplicação
         const formattedBooks = apiBooks.map(book => ({
           id: book.id,
           title: book.title,
@@ -34,6 +32,7 @@ export const BooksProvider = ({ children }) => {
           category: shelfToCategory[book.shelf] || 'quero-ler',
           imageUrl: book.imageLinks?.thumbnail || '',
           notes: book.description || '',
+          rating: 0, 
           dateAdded: new Date().toISOString()
         }));
         setBooks(formattedBooks);
@@ -52,11 +51,11 @@ export const BooksProvider = ({ children }) => {
     const newBook = {
       id: Date.now().toString(),
       ...book,
+      rating: book.rating || 0,
       dateAdded: new Date().toISOString(),
     };
     
     try {
-      // Atualiza o livro na API com a shelf correspondente
       const shelf = categoryToShelf[book.category] || 'wantToRead';
       await BooksAPI.update(newBook, shelf);
       setBooks([...books, newBook]);
@@ -67,12 +66,36 @@ export const BooksProvider = ({ children }) => {
 
   const updateBook = async (id, updatedBook) => {
     try {
-      const book = books.find(b => b.id === id);
-      if (book && updatedBook.category) {
+      const existingBook = books.find(b => b.id === id);
+      
+      
+      if (!existingBook && updatedBook.category && updatedBook.category !== 'none') {
+        const newBook = {
+          id,
+          ...updatedBook,
+          dateAdded: new Date().toISOString()
+        };
         const shelf = categoryToShelf[updatedBook.category];
         await BooksAPI.update({ id }, shelf);
+        setBooks([...books, newBook]);
+        return;
       }
-      setBooks(books.map(book => book.id === id ? { ...book, ...updatedBook } : book));
+      
+      
+      if (existingBook && updatedBook.category) {
+        if (updatedBook.category === 'none') {
+         
+          await BooksAPI.update({ id }, 'none');
+          setBooks(books.filter(book => book.id !== id));
+        } else {
+          
+          const shelf = categoryToShelf[updatedBook.category];
+          await BooksAPI.update({ id }, shelf);
+          setBooks(books.map(book => book.id === id ? { ...book, ...updatedBook } : book));
+        }
+      } else if (existingBook) {
+        setBooks(books.map(book => book.id === id ? { ...book, ...updatedBook } : book));
+      }
     } catch (error) {
       console.error('Erro ao atualizar livro:', error);
     }
@@ -80,7 +103,6 @@ export const BooksProvider = ({ children }) => {
 
   const deleteBook = async (id) => {
     try {
-      // Remove o livro da shelf (move para 'none')
       await BooksAPI.update({ id }, 'none');
       setBooks(books.filter(book => book.id !== id));
     } catch (error) {

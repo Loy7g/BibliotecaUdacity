@@ -4,6 +4,7 @@ import Header from './components/Header/Header';
 import Home from './pages/Home';
 import CategoryPage from './pages/CategoryPage';
 import AddBook from './pages/AddBook';
+import SearchPage from './pages/SearchPage';
 import './App.css';
 
 function App() {
@@ -17,6 +18,7 @@ function App() {
               <Route path="/" element={<Home />} />
               <Route path="/categorias/:category" element={<CategoryPage />} />
               <Route path="/adicionar" element={<AddBook />} />
+              <Route path="/buscar" element={<SearchPage />} />
             </Routes>
           </main>
         </div>

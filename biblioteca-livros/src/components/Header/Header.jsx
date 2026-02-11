@@ -19,6 +19,9 @@ const Header = () => {
           <Link to="/" className={`nav-link ${isActive('/')}`}>
             Início
           </Link>
+          <Link to="/buscar" className={`nav-link ${isActive('/buscar')}`}>
+            🔍 Buscar
+          </Link>
           <Link to="/categorias/quero-ler" className={`nav-link ${isActive('/categorias/quero-ler')}`}>
             Quero Ler
           </Link>
