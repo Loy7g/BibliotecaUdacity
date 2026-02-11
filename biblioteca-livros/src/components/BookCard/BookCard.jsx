@@ -1,12 +1,27 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import StarRating from '../StarRating/StarRating';
 import './BookCard.css';
 
 const BookCard = ({ book, onEdit, onDelete, onChangeCategory, onRatingChange, showEditDelete = true }) => {
+  const fallbackImage =
+    'data:image/svg+xml;utf8,' +
+    encodeURIComponent(
+      `<svg xmlns="http://www.w3.org/2000/svg" width="320" height="480">
+        <rect width="100%" height="100%" fill="#2a2420"/>
+        <text x="50%" y="50%" font-size="42" fill="#d6b24a" font-family="Arial" text-anchor="middle" dominant-baseline="middle">📚</text>
+      </svg>`
+    );
+
   const [imageError, setImageError] = useState(false);
-  const [currentImageUrl, setCurrentImageUrl] = useState(book.imageUrl);
+  const [currentImageUrl, setCurrentImageUrl] = useState(book.imageUrl || fallbackImage);
   const [imageAttempt, setImageAttempt] = useState(0);
-  
+
+  useEffect(() => {
+    setImageError(false);
+    setImageAttempt(0);
+    setCurrentImageUrl(book.imageUrl || fallbackImage);
+  }, [book.imageUrl, fallbackImage]);
+
   const categoryLabels = {
     'lidos': 'Já Li',
     'lendo': 'Lendo',
@@ -29,9 +44,8 @@ const BookCard = ({ book, onEdit, onDelete, onChangeCategory, onRatingChange, sh
         return;
       }
     }
-    
+
     if (imageAttempt === 1 && book.imageUrl) {
-      // Segunda tentativa falhou, tenta substituir 'edge=curl'
       const urlWithoutEdge = currentImageUrl.replace(/&edge=curl/, '');
       if (urlWithoutEdge !== currentImageUrl) {
         setCurrentImageUrl(urlWithoutEdge);
@@ -39,7 +53,9 @@ const BookCard = ({ book, onEdit, onDelete, onChangeCategory, onRatingChange, sh
         return;
       }
     }
-    
+
+    // fallback garantido
+    setCurrentImageUrl(fallbackImage);
     setImageError(true);
   };
 
