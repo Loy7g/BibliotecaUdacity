@@ -39,4 +39,9 @@ export const search = (query, maxResults) =>
     body: JSON.stringify({ query, maxResults }),
   })
     .then((res) => res.json())
-    .then((data) => data.books);
+    .then((data) => {
+      if (data.books && data.books.error) {
+        return [];
+      }
+      return Array.isArray(data.books) ? data.books : [];
+    });

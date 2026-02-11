@@ -1,7 +1,12 @@
+import { useState } from 'react';
 import StarRating from '../StarRating/StarRating';
 import './BookCard.css';
 
 const BookCard = ({ book, onEdit, onDelete, onChangeCategory, onRatingChange, showEditDelete = true }) => {
+  const [imageError, setImageError] = useState(false);
+  const [currentImageUrl, setCurrentImageUrl] = useState(book.imageUrl);
+  const [imageAttempt, setImageAttempt] = useState(0);
+  
   const categoryLabels = {
     'lidos': 'Já Li',
     'lendo': 'Lendo',
@@ -15,13 +20,45 @@ const BookCard = ({ book, onEdit, onDelete, onChangeCategory, onRatingChange, sh
     }
   };
 
+  const handleImageError = () => {
+    if (imageAttempt === 0 && book.imageUrl) {
+      const urlWithoutZoom = book.imageUrl.replace(/&zoom=\d+/, '');
+      if (urlWithoutZoom !== book.imageUrl) {
+        setCurrentImageUrl(urlWithoutZoom);
+        setImageAttempt(1);
+        return;
+      }
+    }
+    
+    if (imageAttempt === 1 && book.imageUrl) {
+      // Segunda tentativa falhou, tenta substituir 'edge=curl'
+      const urlWithoutEdge = currentImageUrl.replace(/&edge=curl/, '');
+      if (urlWithoutEdge !== currentImageUrl) {
+        setCurrentImageUrl(urlWithoutEdge);
+        setImageAttempt(2);
+        return;
+      }
+    }
+    
+    setImageError(true);
+  };
+
   return (
     <div className="book-card">
-      {book.imageUrl && (
-        <div className="book-image">
-          <img src={book.imageUrl} alt={book.title} />
-        </div>
-      )}
+      <div className="book-image">
+        {currentImageUrl && !imageError ? (
+          <img 
+            key={`${book.id}-${imageAttempt}`}
+            src={currentImageUrl} 
+            alt={book.title}
+            onError={handleImageError}
+            loading="lazy"
+            referrerPolicy="no-referrer"
+          />
+        ) : (
+          <div className="no-image-placeholder">📚</div>
+        )}
+      </div>
       <div className="book-card-header">
         <h3 className="book-title">{book.title}</h3>
         {book.category !== 'none' && (

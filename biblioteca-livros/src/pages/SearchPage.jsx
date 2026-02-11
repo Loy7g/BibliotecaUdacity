@@ -2,6 +2,7 @@ import { useState, useContext, useEffect } from 'react';
 import { BooksContext } from '../context/BooksContext';
 import * as BooksAPI from '../BooksAPI';
 import BookCard from '../components/BookCard/BookCard';
+import { normalizeImageUrl } from '../utils/imageUtils';
 import './SearchPage.css';
 
 const SearchPage = () => {
@@ -25,27 +26,29 @@ const SearchPage = () => {
       try {
         const results = await BooksAPI.search(query.trim(), 20);
         
-        
-        if (!results || results.error === 'empty query' || !Array.isArray(results)) {
+
+        if (!results || !Array.isArray(results) || results.length === 0) {
           setSearchResults([]);
           setError('');
           return;
         }
 
-        
+
         const formattedResults = results.map(book => {
-          
           const existingBook = books.find(b => b.id === book.id);
           
           return {
             id: book.id,
             title: book.title || 'Título não disponível',
-            author: book.authors ? book.authors.join(', ') : 'Autor desconhecido',
+            author: book.authors && book.authors.length > 0 
+              ? book.authors.join(', ') 
+              : 'Autor desconhecido',
             year: book.publishedDate || '',
             category: existingBook ? existingBook.category : 'none',
-            imageUrl: book.imageLinks?.thumbnail || book.imageLinks?.smallThumbnail || '',
+            imageUrl: normalizeImageUrl(book.imageLinks),
             notes: book.description || '',
-            dateAdded: existingBook ? existingBook.dateAdded : new Date().toISOString()
+            dateAdded: existingBook ? existingBook.dateAdded : new Date().toISOString(),
+            rating: existingBook ? existingBook.rating : 0
           };
         });
 
@@ -59,10 +62,9 @@ const SearchPage = () => {
       }
     };
 
-   
     const timeoutId = setTimeout(() => {
       searchBooks();
-    }, 300);
+    }, 500);
 
     return () => clearTimeout(timeoutId);
   }, [query, books]);

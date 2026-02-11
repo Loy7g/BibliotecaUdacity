@@ -1,5 +1,6 @@
 import { createContext, useState, useEffect } from 'react';
 import * as BooksAPI from '../BooksAPI';
+import { normalizeImageUrl } from '../utils/imageUtils';
 
 export const BooksContext = createContext();
 
@@ -24,17 +25,19 @@ export const BooksProvider = ({ children }) => {
     const fetchBooks = async () => {
       try {
         const apiBooks = await BooksAPI.getAll();
-        const formattedBooks = apiBooks.map(book => ({
-          id: book.id,
-          title: book.title,
-          author: book.authors ? book.authors.join(', ') : 'Autor desconhecido',
-          year: book.publishedDate || '',
-          category: shelfToCategory[book.shelf] || 'quero-ler',
-          imageUrl: book.imageLinks?.thumbnail || '',
-          notes: book.description || '',
-          rating: 0, 
-          dateAdded: new Date().toISOString()
-        }));
+        const formattedBooks = apiBooks.map(book => {
+          return {
+            id: book.id,
+            title: book.title,
+            author: book.authors ? book.authors.join(', ') : 'Autor desconhecido',
+            year: book.publishedDate || '',
+            category: shelfToCategory[book.shelf] || 'quero-ler',
+            imageUrl: normalizeImageUrl(book.imageLinks),
+            notes: book.description || '',
+            rating: 0, 
+            dateAdded: new Date().toISOString()
+          };
+        });
         setBooks(formattedBooks);
       } catch (error) {
         console.error('Erro ao carregar livros:', error);
